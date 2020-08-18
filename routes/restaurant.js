@@ -4,7 +4,7 @@ const liste = require("../assets/restaurants.json");
 // console.log(liste);
 
 router.get("/liste/restaurants", (req, res) => {
-  const restaurants = liste;
+  const restaurants = liste.find();
   res.json(restaurants);
   console.log(restaurants);
 });
