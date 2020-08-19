@@ -1,7 +1,24 @@
 const express = require("express");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+const uid2 = require("uid2");
+const SHA256 = require("crypto-js/sha256");
+const encBase64 = require("crypto-js/enc-base64");
 
-router.get("/user", (req, res) => {
+const User = require("../models/User");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARI_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+router.get("/user", async (req, res) => {
+  try {
+    const user = await User.find();
+  } catch (error) {
+    res.json({ messages: error.message });
+  }
   res.json({ message: "user" });
 });
 router.post("/user/signup", async (req, res) => {
@@ -67,9 +84,20 @@ router.post("/user/login", async (req, res) => {
       res.status(400).json({ message: "User not found" });
     }
   } catch (error) {
+    console.log("eeeeee" + error.message);
+    res.json({ message: error.message });
+  }
+});
+router.get("/user/:id", async (req, res) => {
+  try {
+    const searchUser = await User.findById(req.params.id);
+    console.log(req.params.id);
+    console.log(req.params);
+    console.log(searchUser);
+    res.json(searchUser);
+  } catch (error) {
     console.log(error.message);
     res.json({ message: error.message });
   }
 });
-
 module.exports = router;

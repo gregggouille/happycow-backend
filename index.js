@@ -5,18 +5,20 @@ const formidable = require("express-formidable");
 const cors = require("cors");
 const app = express();
 app.use(formidable());
+require("dotenv").config();
 app.use(cors());
-// mongoose.connect(process.env.MONGODB_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-const user = require("./routes/user");
-app.use(user);
-const restaurant = require("./routes/restaurant");
-app.use(restaurant);
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
+const userRoutes = require("./routes/user");
+app.use(userRoutes);
+const restaurantRoutes = require("./routes/restaurant");
+app.use(restaurantRoutes);
 app.get("/", (req, res) => {
-  res.json("server started");
+  res.json("server started on", process.env.PORT);
 });
 app.listen(process.env.PORT || 3025, () => {
-  console.log("server started");
+  console.log("server started", process.env.PORT);
 });
